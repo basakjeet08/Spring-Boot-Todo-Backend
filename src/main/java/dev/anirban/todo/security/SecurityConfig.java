@@ -1,7 +1,6 @@
 package dev.anirban.todo.security;
 
 
-import dev.anirban.todo.constants.UrlConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +22,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request ->
-                        request
-                                .requestMatchers(UrlConstants.CREATE_USER).permitAll()
-                                .anyRequest().authenticated()
+                        request.anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
