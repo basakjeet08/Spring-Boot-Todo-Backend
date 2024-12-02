@@ -3,9 +3,7 @@ package dev.anirban.todo.service;
 import dev.anirban.todo.entity.Category;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.CategoryNotFound;
-import dev.anirban.todo.exception.UserNotFound;
 import dev.anirban.todo.repo.CategoryRepository;
-import dev.anirban.todo.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +16,10 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepo;
-    private final UserRepository userRepo;
+    private final UserService userService;
 
     public Category create(Category category, String userId) {
-        User creator = userRepo
-                .findById(userId)
-                .orElseThrow(() -> new UserNotFound(userId));
+        User creator = userService.findById(userId);
 
         Category newCategory = Category
                 .builder()

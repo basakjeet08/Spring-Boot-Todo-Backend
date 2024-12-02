@@ -4,11 +4,7 @@ import dev.anirban.todo.entity.Checkpoint;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.CheckpointNotFound;
-import dev.anirban.todo.exception.TodoNotFound;
-import dev.anirban.todo.exception.UserNotFound;
 import dev.anirban.todo.repo.CheckpointRepository;
-import dev.anirban.todo.repo.TodoRepository;
-import dev.anirban.todo.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,19 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CheckpointService {
 
-    private final UserRepository userRepo;
-    private final TodoRepository todoRepo;
+    private final UserService userService;
+    private final TodoService todoService;
     private final CheckpointRepository checkpointRepo;
 
     public Checkpoint create(Checkpoint checkpoint, String userId, String todoId) {
 
-        User creator = userRepo
-                .findById(userId)
-                .orElseThrow(() -> new UserNotFound(userId));
+        User creator = userService.findById(userId);
 
-        Todo parentTodo = todoRepo
-                .findById(todoId)
-                .orElseThrow(() -> new TodoNotFound(todoId));
+        Todo parentTodo = todoService.findById(todoId);
 
         Checkpoint newCheckpoint = Checkpoint
                 .builder()

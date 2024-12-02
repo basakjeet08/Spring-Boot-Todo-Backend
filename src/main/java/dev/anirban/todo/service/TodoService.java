@@ -3,12 +3,8 @@ package dev.anirban.todo.service;
 import dev.anirban.todo.entity.Category;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
-import dev.anirban.todo.exception.CategoryNotFound;
 import dev.anirban.todo.exception.TodoNotFound;
-import dev.anirban.todo.exception.UserNotFound;
-import dev.anirban.todo.repo.CategoryRepository;
 import dev.anirban.todo.repo.TodoRepository;
-import dev.anirban.todo.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +16,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TodoService {
 
-    private final UserRepository userRepo;
-    private final CategoryRepository categoryRepo;
+    private final UserService userService;
+    private final CategoryService categoryService;
     private final TodoRepository todoRepo;
 
     public Todo create(Todo todo, String userId, String categoryId) {
@@ -35,15 +31,11 @@ public class TodoService {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
 
-        User creator = userRepo
-                .findById(userId)
-                .orElseThrow(() -> new UserNotFound(userId));
+        User creator = userService.findById(userId);
         creator.addTodo(newTodo);
 
         if (categoryId != null) {
-            Category category = categoryRepo
-                    .findById(categoryId)
-                    .orElseThrow(() -> new CategoryNotFound(categoryId));
+            Category category = categoryService.findById(categoryId);
             category.addTodo(newTodo);
         }
 
