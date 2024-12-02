@@ -1,6 +1,7 @@
 package dev.anirban.todo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -50,6 +51,7 @@ public class User {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private Set<Category> categoriesCreated;
 
     @OneToMany(
@@ -58,6 +60,7 @@ public class User {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private Set<Category> todosCreated;
 
     @OneToMany(
@@ -66,5 +69,6 @@ public class User {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
+    @JsonIgnore
     private Set<Category> checkpointCreated;
 }
