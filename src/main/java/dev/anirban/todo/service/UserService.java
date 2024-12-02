@@ -48,6 +48,12 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFound(id));
     }
 
+    public User findByUsername(String username) {
+        return userRepo
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFound(username));
+    }
+
     public void deleteById(String id) {
         if (!userRepo.existsById(id))
             throw new UserNotFound(id);

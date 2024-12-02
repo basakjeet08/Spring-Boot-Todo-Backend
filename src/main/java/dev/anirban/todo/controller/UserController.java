@@ -14,11 +14,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping(UrlConstants.CREATE_USER)
-    public User create(@RequestBody User user) {
-        return userService.create(user);
-    }
-
     @GetMapping(UrlConstants.FIND_ALL_USER)
     public List<User> findAll() {
         return userService.findAll();
