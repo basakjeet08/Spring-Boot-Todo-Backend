@@ -25,11 +25,11 @@ public class UserRepositoryTests {
     @Autowired
     private UserRepository userRepo;
 
-    private User newUser1, newUser2;
+    private User user1, user2;
 
     @BeforeEach
     public void setupUser() {
-        newUser1 = User
+        user1 = User
                 .builder()
                 .name("Test User 01")
                 .username("Test Username 01")
@@ -43,7 +43,7 @@ public class UserRepositoryTests {
                 .checkpointCreated(new HashSet<>())
                 .build();
 
-        newUser2 = User
+        user2 = User
                 .builder()
                 .name("Test User 02")
                 .username("Test Username 02")
@@ -60,59 +60,61 @@ public class UserRepositoryTests {
 
 
     @Test
-    @DisplayName("Save User will return User")
+    @DisplayName("save() -> returns User (positive outcome)")
     public void save_returnsUser() {
 
-        User savedUser = userRepo.save(newUser1);
+        User savedUser = userRepo.save(user1);
 
         Assertions.assertThat(savedUser).isNotNull();
         Assertions.assertThat(savedUser.getUid()).isNotNull();
-        Assertions.assertThat(savedUser).isEqualTo(newUser1);
+        Assertions.assertThat(savedUser).isEqualTo(user1);
     }
 
 
     @Test
-    @DisplayName("Save User with same username will throw an Exception")
-    public void saveWithSameUsername_throwsException() {
-        newUser2.setUsername(newUser1.getUsername());
+    @DisplayName("save() -> Duplicate username -> throws an Exception (negative outcome)")
+    public void save_duplicateUsername_throwsException() {
+        user2.setUsername(user1.getUsername());
 
-        userRepo.save(newUser1);
+        userRepo.save(user1);
 
         Assertions
-                .assertThatThrownBy(() -> userRepo.saveAndFlush(newUser2))
+                .assertThatThrownBy(() -> userRepo.saveAndFlush(user2))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
 
     @Test
-    @DisplayName("Save user with same email will throw an Exception")
-    public void saveWithSameEmail_throwsException() {
-        newUser2.setEmail(newUser1.getEmail());
+    @DisplayName("save() -> Duplicate email -> throws an Exception (negative outcome)")
+    public void save_duplicateEmail_throwsException() {
+        user2.setEmail(user1.getEmail());
 
-        userRepo.save(newUser1);
+        userRepo.save(user1);
 
         Assertions
-                .assertThatThrownBy(() -> userRepo.saveAndFlush(newUser2))
+                .assertThatThrownBy(() -> userRepo.saveAndFlush(user2))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
 
     @Test
-    @DisplayName("Find all will return the list of User")
-    public void findAll_returnsUserList() {
+    @DisplayName("findAll() -> returns List of User (positive outcome)")
+    public void findAll_returnsUsers() {
 
-        userRepo.save(newUser1);
-        userRepo.save(newUser2);
+        userRepo.save(user1);
+        userRepo.save(user2);
 
         List<User> storedUsers = userRepo.findAll();
 
         Assertions.assertThat(storedUsers).isNotNull();
         Assertions.assertThat(storedUsers.size()).isEqualTo(2);
+        Assertions.assertThat(storedUsers.getFirst().getUid()).isEqualTo(user1.getUid());
+        Assertions.assertThat(storedUsers.get(1).getUid()).isEqualTo(user2.getUid());
     }
 
 
     @Test
-    @DisplayName("Find all will return an empty list of User when the table is empty")
+    @DisplayName("findAll() -> returns empty List of User (negative outcome)")
     public void findAll_returnsEmpty() {
         List<User> storedUsers = userRepo.findAll();
         Assertions.assertThat(storedUsers).isEmpty();
@@ -120,10 +122,10 @@ public class UserRepositoryTests {
 
 
     @Test
-    @DisplayName("Find by Id will return the User object")
+    @DisplayName("findById() -> returns User object (positive outcome)")
     public void findById_returnsUser() {
 
-        User storedUser = userRepo.save(newUser1);
+        User storedUser = userRepo.save(user1);
 
         Optional<User> foundUser = userRepo.findById(storedUser.getUid());
 
@@ -133,19 +135,19 @@ public class UserRepositoryTests {
 
 
     @Test
-    @DisplayName("Find By Id will return Empty when we get nothing with that id")
-    public void findById_returnsEmpty() {
-
-        Optional<User> foundUser = userRepo.findById("Invalid Id");
+    @DisplayName("findById() -> returns Empty Optional (negative Outcome)")
+    public void findById_returnsEmptyOptional() {
+        String invalidId = "Invalid Id";
+        Optional<User> foundUser = userRepo.findById(invalidId);
         Assertions.assertThat(foundUser).isEmpty();
     }
 
 
     @Test
-    @DisplayName("Delete function deletes the user entry")
-    public void delete_deletesUser() {
+    @DisplayName("deleteById() -> deletes user (positive outcome)")
+    public void deleteById_deletesUser() {
 
-        User storedUser = userRepo.save(newUser1);
+        User storedUser = userRepo.save(user1);
         userRepo.deleteById(storedUser.getUid());
         List<User> foundUser = userRepo.findAll();
 

@@ -37,17 +37,31 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    private User user;
+    private User user1, user2;
 
     @BeforeEach
     public void setup() {
-        user = User
+        user1 = User
                 .builder()
-                .uid("mock uid")
+                .uid("mock uid 01")
                 .name("Test User 01")
                 .username("Test Username 01")
-                .email("testemail@gmail.com")
+                .email("testemail01@gmail.com")
                 .password("test password 01")
+                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .categoriesCreated(new HashSet<>())
+                .todosCreated(new HashSet<>())
+                .checkpointCreated(new HashSet<>())
+                .build();
+
+        user2 = User
+                .builder()
+                .uid("mock uid 02")
+                .name("Test User 02")
+                .username("Test Username 02")
+                .email("testemail02@gmail.com")
+                .password("test password 02")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
@@ -58,102 +72,122 @@ public class UserServiceTests {
 
 
     @Test
-    @DisplayName("JUnit test for saveEmployee method")
+    @DisplayName("create() -> returns User (positive outcome)")
     public void create_returnsUser() {
 
-        given(userRepo.save(Mockito.any(User.class))).willReturn(user);
-        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn("Encoded Password");
+        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn(user1.getPassword());
+        given(userRepo.save(Mockito.any())).willReturn(user1);
 
-        User savedUser = userService.createUser(user);
+        User savedUser = userService.create(user1);
 
+        verify(userRepo, times(1)).save(Mockito.any());
         Assertions.assertThat(savedUser).isNotNull();
-        Assertions.assertThat(savedUser.getUid()).isEqualTo(user.getUid());
+        Assertions.assertThat(savedUser.getUid()).isEqualTo(user1.getUid());
     }
 
 
     @Test
-    @DisplayName("Saving an user with same username throws Exception")
-    public void create_withSameUsername_throwsException() {
+    @DisplayName("create() -> Duplicate username -> throws an Exception (negative outcome)")
+    public void create_duplicateUsername_throwsException() {
         given(userRepo.save(Mockito.any())).willThrow(DataIntegrityViolationException.class);
-        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn("Encoded Password");
+        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn(user1.getPassword());
 
-        Assertions.assertThatThrownBy(() -> userService.createUser(user))
+        Assertions.assertThatThrownBy(() -> userService.create(user1))
                 .isInstanceOf(DataIntegrityViolationException.class);
-        verify(userRepo, Mockito.atLeastOnce()).save(any(User.class));
+        verify(userRepo, Mockito.times(1)).save(any(User.class));
     }
 
 
     @Test
-    @DisplayName("Finding all Users returns List of User")
-    public void findAll_returnsUserList() {
-        given(userRepo.findAll()).willReturn(List.of(user, user));
+    @DisplayName("create() -> Duplicate email -> throws an Exception (negative outcome)")
+    public void create_duplicateEmail_throwsException() {
+        given(userRepo.save(Mockito.any())).willThrow(DataIntegrityViolationException.class);
+        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn(user1.getPassword());
+
+        Assertions.assertThatThrownBy(() -> userService.create(user1))
+                .isInstanceOf(DataIntegrityViolationException.class);
+        verify(userRepo, Mockito.times(1)).save(any(User.class));
+    }
+
+
+    @Test
+    @DisplayName("findAll() -> returns List of User (positive outcome)")
+    public void findAll_returnsUsers() {
+        given(userRepo.findAll()).willReturn(List.of(user1, user2));
 
         List<User> foundUsers = userService.findAll();
 
-        verify(userRepo, Mockito.atLeastOnce()).findAll();
+        verify(userRepo, Mockito.times(1)).findAll();
         Assertions.assertThat(foundUsers).isNotNull();
         Assertions.assertThat(foundUsers).isNotEmpty();
         Assertions.assertThat(foundUsers.size()).isEqualTo(2);
+        Assertions.assertThat(foundUsers.getFirst().getUid()).isEqualTo(user1.getUid());
+        Assertions.assertThat(foundUsers.get(1).getUid()).isEqualTo(user2.getUid());
     }
 
 
     @Test
-    @DisplayName("Finding all users returns empty")
+    @DisplayName("findAll() -> returns empty List of User (negative outcome)")
     public void findAll_returnsEmpty() {
         given(userRepo.findAll()).willReturn(List.of());
 
         List<User> foundUsers = userService.findAll();
 
-        verify(userRepo, atLeastOnce()).findAll();
+        verify(userRepo, times(1)).findAll();
         Assertions.assertThat(foundUsers).isEmpty();
     }
 
 
     @Test
-    @DisplayName("Find User by User Id return user")
+    @DisplayName("findById() -> returns User object (positive outcome)")
     public void findById_returnsUser() {
-        given(userRepo.findById(user.getUid())).willReturn(Optional.of(user));
+        given(userRepo.findById(user1.getUid())).willReturn(Optional.of(user1));
 
-        User foundUser = userService.findById(user.getUid());
+        User foundUser = userService.findById(user1.getUid());
 
-        verify(userRepo, atLeastOnce()).findById(user.getUid());
+        verify(userRepo, times(1)).findById(user1.getUid());
         Assertions.assertThat(foundUser).isNotNull();
-        Assertions.assertThat(foundUser).isEqualTo(user);
+        Assertions.assertThat(foundUser).isEqualTo(user1);
     }
 
 
     @Test
-    @DisplayName("Find User by User id throws Exception")
+    @DisplayName("findById() -> returns Empty Optional (negative Outcome)")
     public void findById_throwsException() {
-        given(userRepo.findById("Invalid Mock Id")).willReturn(Optional.empty());
+        String invalidId = user1.getUid();
+
+        given(userRepo.findById(invalidId)).willReturn(Optional.empty());
 
         Assertions
-                .assertThatThrownBy(() -> userService.findById("Invalid Mock Id"))
+                .assertThatThrownBy(() -> userService.findById(invalidId))
                 .isInstanceOf(UserNotFound.class);
+
+        verify(userRepo, times(1)).findById(invalidId);
     }
 
 
     @Test
-    @DisplayName("Delete user by user id deletes User")
-    public void delete_deletesUser() {
-        willDoNothing().given(userRepo).deleteById(user.getUid());
-        given(userRepo.existsById(user.getUid())).willReturn(true);
+    @DisplayName("deleteById() -> deletes user (positive outcome)")
+    public void deleteById_deletesUser() {
+        willDoNothing().given(userRepo).deleteById(user1.getUid());
+        given(userRepo.existsById(user1.getUid())).willReturn(true);
 
-        userService.deleteUser(user.getUid());
+        userService.deleteById(user1.getUid());
 
-        verify(userRepo, times(1)).deleteById(user.getUid());
+        verify(userRepo, times(1)).deleteById(user1.getUid());
     }
 
     @Test
-    @DisplayName("Delete user by invalid user id throws Exception")
-    public void delete_withInvalidId_throwsException() {
+    @DisplayName("deleteById() -> throws Exception (negative outcome)")
+    public void deleteById_withInvalidId_throwsException() {
 
-        given(userRepo.existsById("Invalid User Id")).willReturn(false);
+        String invalidId = user1.getUid();
+        given(userRepo.existsById(invalidId)).willReturn(false);
 
         Assertions
-                .assertThatThrownBy(() -> userService.deleteUser("Invalid User Id"))
+                .assertThatThrownBy(() -> userService.deleteById(invalidId))
                 .isInstanceOf(UserNotFound.class);
 
-        verify(userRepo, never()).deleteById("Invalid User Id");
+        verify(userRepo, never()).deleteById(invalidId);
     }
 }

@@ -15,8 +15,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(UrlConstants.CREATE_USER)
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public User create(@RequestBody User user) {
+        return userService.create(user);
     }
 
     @GetMapping(UrlConstants.FIND_ALL_USER)
@@ -31,6 +31,6 @@ public class UserController {
 
     @DeleteMapping(UrlConstants.DELETE_USER_BY_ID)
     public void deleteById(@PathVariable String id) {
-        userService.deleteUser(id);
+        userService.deleteById(id);
     }
 }

@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository userRepo;
     private final PasswordEncoder encoder;
 
-    public User createUser(User user) {
+    public User create(User user) {
         User newUser = User
                 .builder()
                 .name(user.getName())
@@ -47,7 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFound(id));
     }
 
-    public void deleteUser(String id) {
+    public void deleteById(String id) {
         if (!userRepo.existsById(id))
             throw new UserNotFound(id);
 

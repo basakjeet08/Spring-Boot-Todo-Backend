@@ -82,9 +82,9 @@ public class UserControllerTests {
 
 
     @Test
-    @DisplayName("Creating User returns new created User")
+    @DisplayName("create() -> returns User (positive outcome)")
     public void create_returnsUser() throws Exception {
-        given(userService.createUser(Mockito.any())).willReturn(user1);
+        given(userService.create(Mockito.any())).willReturn(user1);
 
         mockMvc.perform(post(UrlConstants.CREATE_USER)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,13 +93,15 @@ public class UserControllerTests {
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uid").exists())
                 .andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService, Mockito.times(1)).create(Mockito.any());
     }
 
 
     @Test
-    @DisplayName("Creating User with already present Email throws Exception")
-    public void create_withSameEmail_throwsException() {
-        given(userService.createUser(Mockito.any())).willThrow(DataIntegrityViolationException.class);
+    @DisplayName("create() -> Duplicate username -> throws an Exception (negative outcome)")
+    public void create_duplicateUsername_throwsException() {
+        given(userService.create(Mockito.any())).willThrow(DataIntegrityViolationException.class);
 
         Assertions.assertThatThrownBy(() ->
                 mockMvc.perform(post(UrlConstants.CREATE_USER)
@@ -108,12 +110,31 @@ public class UserControllerTests {
                         .accept(MediaType.APPLICATION_JSON)
                 )
         ).isInstanceOf(ServletException.class);
+
+        verify(userService, times(1)).create(Mockito.any());
     }
 
 
     @Test
-    @DisplayName("Find all will return a List of User")
-    public void findAll_returnsUserList() throws Exception {
+    @DisplayName("create() -> Duplicate email -> throws an Exception (negative outcome)")
+    public void create_duplicateEmail_throwsException() {
+        given(userService.create(Mockito.any())).willThrow(DataIntegrityViolationException.class);
+
+        Assertions.assertThatThrownBy(() ->
+                mockMvc.perform(post(UrlConstants.CREATE_USER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user1))
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+        ).isInstanceOf(ServletException.class);
+
+        verify(userService, times(1)).create(Mockito.any());
+    }
+
+
+    @Test
+    @DisplayName("findAll() -> returns List of User (positive outcome)")
+    public void findAll_returnsUsers() throws Exception {
         given(userService.findAll()).willReturn(List.of(user1, user2));
 
         mockMvc.perform(get(UrlConstants.FIND_ALL_USER)
@@ -124,11 +145,13 @@ public class UserControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].uid").value(user1.getUid()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].uid").value(user2.getUid()));
+
+        verify(userService, times(1)).findAll();
     }
 
 
     @Test
-    @DisplayName("Find all will return empty List")
+    @DisplayName("findAll() -> returns empty List of User (negative outcome)")
     public void findAll_returnsEmpty() throws Exception {
         given(userService.findAll()).willReturn(List.of());
 
@@ -138,11 +161,13 @@ public class UserControllerTests {
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(0));
+
+        verify(userService, times(1)).findAll();
     }
 
 
     @Test
-    @DisplayName("Find by Id will return a User")
+    @DisplayName("findById() -> returns User object (positive outcome)")
     public void findById_returnsUser() throws Exception {
         given(userService.findById(user1.getUid())).willReturn(user1);
 
@@ -152,47 +177,61 @@ public class UserControllerTests {
                 ).andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uid").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.uid").value(user1.getUid()));
+
+        verify(userService, times(1)).findById(user1.getUid());
     }
 
 
     @Test
-    @DisplayName("Find by Id with Invalid Id will throw Exception")
-    public void findById_invalidId_throwsException() {
-        given(userService.findById("Invalid Id")).willThrow(UserNotFound.class);
+    @DisplayName("findById() -> returns Empty Optional (negative Outcome)")
+    public void findById_throwsException() {
+
+        String invalidId = "Invalid Id";
+
+        given(userService.findById(invalidId)).willThrow(UserNotFound.class);
 
         Assertions.assertThatThrownBy(() ->
-                mockMvc.perform(get(UrlConstants.FIND_USER_BY_ID, "Invalid Id")
+                mockMvc.perform(get(UrlConstants.FIND_USER_BY_ID, invalidId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
         ).isInstanceOf(ServletException.class);
+
+        verify(userService, times(1)).findById(invalidId);
     }
 
 
     @Test
-    @DisplayName("Delete By Id deletes the user")
+    @DisplayName("deleteById() -> deletes user (positive outcome)")
     public void deleteById_deletesUser() throws Exception {
-        willDoNothing().given(userService).deleteUser(user1.getUid());
+        willDoNothing().given(userService).deleteById(user1.getUid());
 
         mockMvc.perform(
-                get(UrlConstants.DELETE_USER_BY_ID, user1.getUid())
+                delete(UrlConstants.DELETE_USER_BY_ID, user1.getUid())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(MockMvcResultMatchers.status().isOk());
+
+        verify(userService, times(1)).deleteById(user1.getUid());
     }
 
 
     @Test
-    @DisplayName("Delete By Id with Invalid Id throws Exception")
-    public void deleteById_invalidId_throwsException() {
-        willThrow(UserNotFound.class).given(userService).deleteUser("Invalid Id");
+    @DisplayName("deleteById() -> throws Exception (negative outcome)")
+    public void deleteById_withInvalidId_throwsException() {
+
+
+        String invalidId = "Invalid Id";
+        willThrow(UserNotFound.class).given(userService).deleteById(invalidId);
 
         Assertions.assertThatThrownBy(() ->
                 mockMvc.perform(
-                        delete(UrlConstants.DELETE_USER_BY_ID, "Invalid Id")
+                        delete(UrlConstants.DELETE_USER_BY_ID, invalidId)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON)
                 )
         ).isInstanceOf(ServletException.class);
+
+        verify(userService, times(1)).deleteById(invalidId);
     }
 }
