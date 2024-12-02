@@ -40,6 +40,7 @@ public class Category {
             cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.EAGER
     )
+    @JoinColumn(nullable = false)
     private User createdBy;
 
     @OneToMany(
