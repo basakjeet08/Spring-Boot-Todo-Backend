@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Table(name = "CHECKPOINT_DB")
 public class Checkpoint {
 
-    enum CheckpointStatus {
+    public enum CheckpointStatus {
         PENDING, STARTED, COMPLETED
     }
 

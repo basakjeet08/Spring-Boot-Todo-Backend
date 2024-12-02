@@ -20,4 +20,10 @@ public class UrlConstants {
     public static final String FIND_ALL_TODO = "/todos";
     public static final String FIND_TODO_BY_ID = "/todos/{id}";
     public static final String DELETE_TODO_BY_ID = "/todos/{id}";
+
+    // Checkpoint Endpoints
+    public static final String CREATE_CHECKPOINT = "/checkpoints";
+    public static final String FIND_ALL_CHECKPOINT = "/checkpoints";
+    public static final String FIND_CHECKPOINT_BY_ID = "/checkpoints/{id}";
+    public static final String DELETE_CHECKPOINT_BY_ID = "/checkpoints/{id}";
 }
