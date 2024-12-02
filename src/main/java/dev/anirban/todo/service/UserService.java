@@ -26,6 +26,7 @@ public class UserService {
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .password(encoder.encode(user.getPassword()))
+                .roles(User.UserRole.USER)
                 .avatar("Default Image Url")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
