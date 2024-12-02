@@ -40,10 +40,10 @@ public class CheckpointService {
                 .status(checkpoint.getStatus() != null ? checkpoint.getStatus() : Checkpoint.CheckpointStatus.PENDING)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .todo(parentTodo)
                 .build();
 
         creator.addCheckpoint(newCheckpoint);
+        parentTodo.addCheckpoint(newCheckpoint);
 
         return checkpointRepo.save(newCheckpoint);
     }

@@ -3,6 +3,7 @@ package dev.anirban.todo.service;
 import dev.anirban.todo.entity.Category;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
+import dev.anirban.todo.exception.CategoryNotFound;
 import dev.anirban.todo.exception.TodoNotFound;
 import dev.anirban.todo.exception.UserNotFound;
 import dev.anirban.todo.repo.CategoryRepository;
@@ -25,14 +26,6 @@ public class TodoService {
 
     public Todo create(Todo todo, String userId, String categoryId) {
 
-        User creator = userRepo
-                .findById(userId)
-                .orElseThrow(() -> new UserNotFound(userId));
-
-        Category category = categoryRepo
-                .findById(categoryId != null ? categoryId : "")
-                .orElse(null);
-
         Todo newTodo = Todo
                 .builder()
                 .title(todo.getTitle())
@@ -40,10 +33,19 @@ public class TodoService {
                 .status(todo.getStatus() != null ? todo.getStatus() : Todo.TodoStatus.PENDING)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .category(category)
                 .build();
 
+        User creator = userRepo
+                .findById(userId)
+                .orElseThrow(() -> new UserNotFound(userId));
         creator.addTodo(newTodo);
+
+        if (categoryId != null) {
+            Category category = categoryRepo
+                    .findById(categoryId)
+                    .orElseThrow(() -> new CategoryNotFound(categoryId));
+            category.addTodo(newTodo);
+        }
 
         return todoRepo.save(newTodo);
     }

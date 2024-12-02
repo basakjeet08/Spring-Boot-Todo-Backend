@@ -1,11 +1,13 @@
 package dev.anirban.todo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,4 +41,18 @@ public class Category {
             fetch = FetchType.EAGER
     )
     private User createdBy;
+
+    @OneToMany(
+            mappedBy = "category",
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            cascade = CascadeType.ALL
+    )
+    @JsonIgnore
+    private Set<Todo> todoList;
+
+    public void addTodo(Todo todo) {
+        todoList.add(todo);
+        todo.setCategory(this);
+    }
 }
