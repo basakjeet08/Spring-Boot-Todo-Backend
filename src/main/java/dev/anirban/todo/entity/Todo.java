@@ -17,7 +17,7 @@ import java.sql.Timestamp;
 @Table(name = "TODO_DB")
 public class Todo {
 
-    enum TodoStatus {
+    public enum TodoStatus {
         PENDING, STARTED, COMPLETED
     }
 

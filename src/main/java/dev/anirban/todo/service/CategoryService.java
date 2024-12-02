@@ -31,9 +31,9 @@ public class CategoryService {
                 .description(category.getDescription())
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .createdBy(creator)
                 .build();
 
+        creator.addCategory(newCategory);
         return categoryRepo.save(newCategory);
     }
 

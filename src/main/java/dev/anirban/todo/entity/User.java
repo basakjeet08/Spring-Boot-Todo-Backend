@@ -61,7 +61,7 @@ public class User {
             cascade = CascadeType.ALL
     )
     @JsonIgnore
-    private Set<Category> todosCreated;
+    private Set<Todo> todosCreated;
 
     @OneToMany(
             mappedBy = "createdBy",
@@ -70,5 +70,20 @@ public class User {
             cascade = CascadeType.ALL
     )
     @JsonIgnore
-    private Set<Category> checkpointCreated;
+    private Set<Checkpoint> checkpointCreated;
+
+    public void addCategory(Category category) {
+        categoriesCreated.add(category);
+        category.setCreatedBy(this);
+    }
+
+    public void addTodo(Todo todo) {
+        todosCreated.add(todo);
+        todo.setCreatedBy(this);
+    }
+
+    public void addCheckpoint(Checkpoint checkpoint) {
+        checkpointCreated.add(checkpoint);
+        checkpoint.setCreatedBy(this);
+    }
 }
