@@ -30,6 +30,11 @@ public class CategoryController {
         return service.findById(id);
     }
 
+    @GetMapping(UrlConstants.FIND_CATEGORY_BY_USER_ID)
+    public List<Category> findByCreatedBy_Uid(@PathVariable String userId) {
+        return service.findByCreatedBy_Uid(userId);
+    }
+
     @DeleteMapping(UrlConstants.DELETE_CATEGORY_BY_ID)
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);

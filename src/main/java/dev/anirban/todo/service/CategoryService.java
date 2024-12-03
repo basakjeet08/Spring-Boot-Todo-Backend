@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -27,6 +28,7 @@ public class CategoryService {
                 .description(category.getDescription())
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .todoList(new HashSet<>())
                 .build();
 
         creator.addCategory(newCategory);
@@ -41,6 +43,10 @@ public class CategoryService {
         return categoryRepo
                 .findById(id)
                 .orElseThrow(() -> new CategoryNotFound(id));
+    }
+
+    public List<Category> findByCreatedBy_Uid(String createdById){
+        return categoryRepo.findByCreatedBy_Uid(createdById);
     }
 
     public void deleteById(String id) {
