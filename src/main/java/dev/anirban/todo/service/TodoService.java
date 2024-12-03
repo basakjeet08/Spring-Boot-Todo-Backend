@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class TodoService {
                 .status(todo.getStatus() != null ? todo.getStatus() : Todo.TodoStatus.PENDING)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .checkpoints(new HashSet<>())
                 .build();
 
         User creator = userService.findById(userId);
@@ -49,6 +51,14 @@ public class TodoService {
     public Todo findById(String id) {
         return todoRepo.findById(id)
                 .orElseThrow(() -> new TodoNotFound(id));
+    }
+
+    public List<Todo> findByCreatedBy_Uid(String userId) {
+        return todoRepo.findByCreatedBy_Uid(userId);
+    }
+
+    public List<Todo> findByCreatedBy_UidAndCategory_Id(String userId, String categoryId) {
+        return todoRepo.findByCreatedBy_UidAndCategory_Id(userId, categoryId);
     }
 
     public void deleteById(String id) {

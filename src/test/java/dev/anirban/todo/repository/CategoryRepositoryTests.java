@@ -24,11 +24,11 @@ public class CategoryRepositoryTests {
 
     @Autowired
     private UserRepository userRepo;
-    private User user1 , user2;
+    private User user1, user2;
 
     @Autowired
     private CategoryRepository catRepo;
-    private Category category1 , category2;
+    private Category category1, category2;
 
     @BeforeEach
     public void setupUser() {
@@ -69,13 +69,14 @@ public class CategoryRepositoryTests {
 
 
     @BeforeEach
-    public void setupCategory(){
+    public void setupCategory() {
         category1 = Category
                 .builder()
                 .name("Category 01")
                 .description("Description 01")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .todoList(new HashSet<>())
                 .build();
 
         category2 = Category
@@ -84,13 +85,14 @@ public class CategoryRepositoryTests {
                 .description("Description 02")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                .todoList(new HashSet<>())
                 .build();
     }
 
 
     @Test
-    @DisplayName("findByCreatedBy_Uid() -> returns List of Category")
-    public void findByCreatedBy_Uid_returnsCategories(){
+    @DisplayName("findByCreatedBy_Uid() -> returns List of Category (positive outcome)")
+    public void findByCreatedBy_Uid_returnsCategories() {
         user1.addCategory(category1);
         catRepo.save(category1);
 
@@ -104,8 +106,8 @@ public class CategoryRepositoryTests {
     }
 
     @Test
-    @DisplayName("findByCreatedBy_Uid() -> returns Empty")
-    public void findByCreatedBy_Uid_returnsEmpty(){
+    @DisplayName("findByCreatedBy_Uid() -> returns Empty (negative outcome)")
+    public void findByCreatedBy_Uid_returnsEmpty() {
         List<Category> foundCategories = catRepo.findByCreatedBy_Uid(user1.getUid());
         Assertions.assertThat(foundCategories).isEmpty();
     }

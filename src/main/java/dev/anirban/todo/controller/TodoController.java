@@ -33,6 +33,19 @@ public class TodoController {
         return service.findById(id);
     }
 
+    @GetMapping(UrlConstants.FIND_TODO_BY_USER_ID)
+    public List<Todo> findByCreatedBy_Uid(@PathVariable String userId) {
+        return service.findByCreatedBy_Uid(userId);
+    }
+
+    @GetMapping(UrlConstants.FIND_TODO_BY_USER_ID_AND_CATEGORY_ID)
+    public List<Todo> findByCreatedBy_UidAndCategory_Id(
+            @PathVariable String userId, @PathVariable String categoryId
+    ) {
+        return service.findByCreatedBy_UidAndCategory_Id(userId, categoryId);
+    }
+
+
     @DeleteMapping(UrlConstants.DELETE_TODO_BY_ID)
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
