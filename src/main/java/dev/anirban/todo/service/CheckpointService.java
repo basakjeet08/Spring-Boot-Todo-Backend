@@ -50,6 +50,14 @@ public class CheckpointService {
                 .orElseThrow(() -> new CheckpointNotFound(id));
     }
 
+    public List<Checkpoint> findByCreatedBy_Uid(String createdById) {
+        return checkpointRepo.findByCreatedBy_Uid(createdById);
+    }
+
+    public List<Checkpoint> findByCreatedBy_UidAndTodo_Id(String createdById, String todoId) {
+        return checkpointRepo.findByCreatedBy_UidAndTodo_Id(createdById, todoId);
+    }
+
     public void deleteById(String id) {
         if (!checkpointRepo.existsById(id))
             throw new CheckpointNotFound(id);

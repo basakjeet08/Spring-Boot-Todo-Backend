@@ -33,6 +33,18 @@ public class CheckpointController {
         return service.findById(id);
     }
 
+    @GetMapping(UrlConstants.FIND_CHECKPOINT_BY_USER_ID)
+    public List<Checkpoint> findByCreatedBy_Uid(@PathVariable String userId) {
+        return service.findByCreatedBy_Uid(userId);
+    }
+
+    @GetMapping(UrlConstants.FIND_CHECKPOINT_BY_USER_ID_AND_TODO_ID)
+    public List<Checkpoint> findByCreatedBy_UidAndTodo_Id(
+            @PathVariable String userId, @PathVariable String todoId
+    ) {
+        return service.findByCreatedBy_UidAndTodo_Id(userId, todoId);
+    }
+
     @DeleteMapping(UrlConstants.DELETE_CHECKPOINT_BY_ID)
     public void deleteById(@PathVariable String id) {
         service.deleteById(id);
