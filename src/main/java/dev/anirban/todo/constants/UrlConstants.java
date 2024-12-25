@@ -19,10 +19,8 @@ public class UrlConstants {
 
     // To Do Endpoints
     public static final String CREATE_TODO = "/todos";
-    public static final String FIND_ALL_TODO = "/todos";
     public static final String FIND_TODO_BY_ID = "/todos/{id}";
-    public static final String FIND_TODO_BY_USER_ID = "/todos/user/{userId}";
-    public static final String FIND_TODO_BY_USER_ID_AND_CATEGORY_ID = "/todos/user/{userId}/category/{categoryId}";
+    public static final String FIND_TODO_QUERY = "/todos";
     public static final String DELETE_TODO_BY_ID = "/todos/{id}";
 
     // Checkpoint Endpoints

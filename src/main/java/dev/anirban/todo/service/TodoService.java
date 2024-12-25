@@ -1,8 +1,10 @@
 package dev.anirban.todo.service;
 
+import dev.anirban.todo.dto.TodoDto;
 import dev.anirban.todo.entity.Category;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
+import dev.anirban.todo.exception.RequestNotAuthorized;
 import dev.anirban.todo.exception.TodoNotFound;
 import dev.anirban.todo.repo.TodoRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +23,7 @@ public class TodoService {
     private final CategoryService categoryService;
     private final TodoRepository todoRepo;
 
-    public Todo create(Todo todo, String userId, String categoryId) {
+    public Todo create(TodoDto todo, User user) {
 
         Todo newTodo = Todo
                 .builder()
@@ -33,19 +35,18 @@ public class TodoService {
                 .checkpoints(new HashSet<>())
                 .build();
 
-        User creator = userService.findById(userId);
+        User creator = userService.findById(user.getUid());
         creator.addTodo(newTodo);
 
-        if (categoryId != null) {
-            Category category = categoryService.findById(categoryId);
+        if (todo.getCategory() != null && !todo.getCategory().isBlank()) {
+            Category category = categoryService.findById(todo.getCategory());
+            if (!category.getCreatedBy().getUid().equals(creator.getUid()))
+                throw new RequestNotAuthorized();
+
             category.addTodo(newTodo);
         }
 
         return todoRepo.save(newTodo);
-    }
-
-    public List<Todo> findAll() {
-        return todoRepo.findAll();
     }
 
     public Todo findById(String id) {
@@ -61,9 +62,11 @@ public class TodoService {
         return todoRepo.findByCreatedBy_UidAndCategory_Id(userId, categoryId);
     }
 
-    public void deleteById(String id) {
-        if (!todoRepo.existsById(id))
-            throw new TodoNotFound(id);
+    public void deleteById(User user, String id) {
+        Todo todo = findById(id);
+
+        if (!todo.getCreatedBy().getUid().equals(user.getUid()))
+            throw new RequestNotAuthorized();
 
         todoRepo.deleteById(id);
     }

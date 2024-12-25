@@ -2,6 +2,7 @@ package dev.anirban.todo.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.anirban.todo.dto.TodoDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -68,5 +69,16 @@ public class Todo {
     public void addCheckpoint(Checkpoint checkpoint) {
         checkpoints.add(checkpoint);
         checkpoint.setTodo(this);
+    }
+
+    public TodoDto toTodoDto() {
+        return TodoDto
+                .builder()
+                .id(id)
+                .title(title)
+                .description(description)
+                .status(status)
+                .category(category != null ? category.getId() : null)
+                .build();
     }
 }
