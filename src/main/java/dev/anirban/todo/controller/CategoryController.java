@@ -1,13 +1,16 @@
 package dev.anirban.todo.controller;
 
-
 import dev.anirban.todo.constants.UrlConstants;
+import dev.anirban.todo.dto.CategoryDto;
 import dev.anirban.todo.entity.Category;
+import dev.anirban.todo.entity.User;
 import dev.anirban.todo.service.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -16,27 +19,27 @@ public class CategoryController {
     private final CategoryService service;
 
     @PostMapping(UrlConstants.CREATE_CATEGORY)
-    public Category create(@RequestBody Category category, @RequestParam(name = "userId") String userId) {
-        return service.create(category, userId);
-    }
-
-    @GetMapping(UrlConstants.FIND_ALL_CATEGORY)
-    public List<Category> findAll() {
-        return service.findAll();
-    }
-
-    @GetMapping(UrlConstants.FIND_CATEGORY_BY_ID)
-    public Category findById(@PathVariable String id) {
-        return service.findById(id);
+    public CategoryDto create(
+            @RequestBody CategoryDto category,
+            @AuthenticationPrincipal User user
+    ) {
+        return service.create(category, user.getUid()).toCategoryDto();
     }
 
     @GetMapping(UrlConstants.FIND_CATEGORY_BY_USER_ID)
-    public List<Category> findByCreatedBy_Uid(@PathVariable String userId) {
-        return service.findByCreatedBy_Uid(userId);
+    public List<CategoryDto> findByCreatedBy_Uid(@AuthenticationPrincipal User user) {
+        return service
+                .findByCreatedBy_Uid(user.getUid())
+                .stream()
+                .map(Category::toCategoryDto)
+                .toList();
     }
 
     @DeleteMapping(UrlConstants.DELETE_CATEGORY_BY_ID)
-    public void deleteById(@PathVariable String id) {
-        service.deleteById(id);
+    public void deleteById(
+            @AuthenticationPrincipal User user,
+            @PathVariable String id
+    ) {
+        service.deleteById(user, id);
     }
 }

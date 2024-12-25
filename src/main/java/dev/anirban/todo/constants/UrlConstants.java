@@ -14,9 +14,7 @@ public class UrlConstants {
 
     // Category Endpoints
     public static final String CREATE_CATEGORY = "/categories";
-    public static final String FIND_ALL_CATEGORY = "/categories";
-    public static final String FIND_CATEGORY_BY_ID = "/categories/{id}";
-    public static final String FIND_CATEGORY_BY_USER_ID = "/categories/user/{userId}";
+    public static final String FIND_CATEGORY_BY_USER_ID = "/categories";
     public static final String DELETE_CATEGORY_BY_ID = "/categories/{id}";
 
     // To Do Endpoints

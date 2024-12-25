@@ -2,6 +2,7 @@ package dev.anirban.todo.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.anirban.todo.dto.CategoryDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -55,5 +56,15 @@ public class Category {
     public void addTodo(Todo todo) {
         todoList.add(todo);
         todo.setCategory(this);
+    }
+
+    public CategoryDto toCategoryDto() {
+        return CategoryDto
+                .builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .UserUid(createdBy.getUid())
+                .build();
     }
 }
