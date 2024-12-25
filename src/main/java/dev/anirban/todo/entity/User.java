@@ -2,6 +2,7 @@ package dev.anirban.todo.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dev.anirban.todo.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -98,6 +99,16 @@ public class User implements UserDetails {
     public void addCheckpoint(Checkpoint checkpoint) {
         checkpointCreated.add(checkpoint);
         checkpoint.setCreatedBy(this);
+    }
+
+    public UserDto toUserDto() {
+        return UserDto
+                .builder()
+                .uid(uid)
+                .name(name)
+                .username(username)
+                .email(email)
+                .build();
     }
 
 

@@ -1,6 +1,7 @@
 package dev.anirban.todo.service;
 
 
+import dev.anirban.todo.dto.AuthDto;
 import dev.anirban.todo.dto.TokenWrapper;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.security.JwtService;
@@ -19,14 +20,13 @@ public class AuthService {
     private final AuthenticationManager authManager;
 
 
-    public User registerUser(User user) {
-        return userService.create(user);
+    public User registerUser(AuthDto authDto) {
+        return userService.create(authDto);
     }
 
-    public TokenWrapper loginUser(String username, String password) {
-
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        User savedUser = userService.findByUsername(username);
+    public TokenWrapper loginUser(AuthDto authDto) {
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(authDto.getUsername(), authDto.getPassword()));
+        User savedUser = userService.findByUsername(authDto.getUsername());
         return new TokenWrapper(jwtService.generateToken(savedUser));
     }
 }

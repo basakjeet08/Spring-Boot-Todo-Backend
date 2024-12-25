@@ -1,5 +1,6 @@
 package dev.anirban.todo.service;
 
+import dev.anirban.todo.dto.AuthDto;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.UserNotFound;
 import dev.anirban.todo.repo.UserRepository;
@@ -19,13 +20,13 @@ public class UserService {
     private final UserRepository userRepo;
     private final PasswordEncoder encoder;
 
-    public User create(User user) {
+    public User create(AuthDto authDto) {
         User newUser = User
                 .builder()
-                .name(user.getName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .password(encoder.encode(user.getPassword()))
+                .name(authDto.getName())
+                .username(authDto.getUsername())
+                .email(authDto.getEmail())
+                .password(encoder.encode(authDto.getPassword()))
                 .roles(User.UserRole.USER)
                 .avatar("Default Image Url")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))

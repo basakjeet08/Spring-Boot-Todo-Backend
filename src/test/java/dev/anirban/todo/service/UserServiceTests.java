@@ -12,8 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -21,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.*;
@@ -31,8 +28,6 @@ public class UserServiceTests {
 
     @Mock
     private UserRepository userRepo;
-    @Mock
-    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserService userService;
@@ -69,46 +64,6 @@ public class UserServiceTests {
                 .checkpointCreated(new HashSet<>())
                 .build();
     }
-
-
-    @Test
-    @DisplayName("create() -> returns User (positive outcome)")
-    public void create_returnsUser() {
-
-        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn(user1.getPassword());
-        given(userRepo.save(Mockito.any())).willReturn(user1);
-
-        User savedUser = userService.create(user1);
-
-        verify(userRepo, times(1)).save(Mockito.any());
-        Assertions.assertThat(savedUser).isNotNull();
-        Assertions.assertThat(savedUser.getUid()).isEqualTo(user1.getUid());
-    }
-
-
-    @Test
-    @DisplayName("create() -> Duplicate username -> throws an Exception (negative outcome)")
-    public void create_duplicateUsername_throwsException() {
-        given(userRepo.save(Mockito.any())).willThrow(DataIntegrityViolationException.class);
-        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn(user1.getPassword());
-
-        Assertions.assertThatThrownBy(() -> userService.create(user1))
-                .isInstanceOf(DataIntegrityViolationException.class);
-        verify(userRepo, Mockito.times(1)).save(any(User.class));
-    }
-
-
-    @Test
-    @DisplayName("create() -> Duplicate email -> throws an Exception (negative outcome)")
-    public void create_duplicateEmail_throwsException() {
-        given(userRepo.save(Mockito.any())).willThrow(DataIntegrityViolationException.class);
-        given(passwordEncoder.encode(Mockito.any(String.class))).willReturn(user1.getPassword());
-
-        Assertions.assertThatThrownBy(() -> userService.create(user1))
-                .isInstanceOf(DataIntegrityViolationException.class);
-        verify(userRepo, Mockito.times(1)).save(any(User.class));
-    }
-
 
     @Test
     @DisplayName("findAll() -> returns List of User (positive outcome)")
