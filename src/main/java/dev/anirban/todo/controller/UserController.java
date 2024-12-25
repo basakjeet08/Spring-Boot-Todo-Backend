@@ -1,12 +1,13 @@
 package dev.anirban.todo.controller;
 
 import dev.anirban.todo.constants.UrlConstants;
+import dev.anirban.todo.dto.UserDto;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,18 +15,13 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping(UrlConstants.FIND_ALL_USER)
-    public List<User> findAll() {
-        return userService.findAll();
+    @GetMapping(UrlConstants.FIND_USER)
+    public UserDto findById(@AuthenticationPrincipal User user) {
+        return userService.findById(user.getUid()).toUserDto();
     }
 
-    @GetMapping(UrlConstants.FIND_USER_BY_ID)
-    public User findById(@PathVariable String id) {
-        return userService.findById(id);
-    }
-
-    @DeleteMapping(UrlConstants.DELETE_USER_BY_ID)
-    public void deleteById(@PathVariable String id) {
-        userService.deleteById(id);
+    @DeleteMapping(UrlConstants.DELETE_USER)
+    public void deleteById(@AuthenticationPrincipal User user) {
+        userService.deleteById(user.getUid());
     }
 }

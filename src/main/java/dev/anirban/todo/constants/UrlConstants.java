@@ -8,9 +8,8 @@ public class UrlConstants {
     public static final String LOGIN_USER = "/login";
 
     // User Endpoints
-    public static final String FIND_ALL_USER = "/users";
-    public static final String FIND_USER_BY_ID = "/users/{id}";
-    public static final String DELETE_USER_BY_ID = "/users/{id}";
+    public static final String FIND_USER = "/users";
+    public static final String DELETE_USER = "/users";
 
     // Category Endpoints
     public static final String CREATE_CATEGORY = "/categories";
