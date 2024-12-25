@@ -1,9 +1,11 @@
 package dev.anirban.todo.service;
 
+import dev.anirban.todo.dto.CheckpointDto;
 import dev.anirban.todo.entity.Checkpoint;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.CheckpointNotFound;
+import dev.anirban.todo.exception.RequestNotAuthorized;
 import dev.anirban.todo.repo.CheckpointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,10 @@ public class CheckpointService {
     private final TodoService todoService;
     private final CheckpointRepository checkpointRepo;
 
-    public Checkpoint create(Checkpoint checkpoint, String userId, String todoId) {
+    public Checkpoint create(CheckpointDto checkpoint, User user) {
 
-        User creator = userService.findById(userId);
-
-        Todo parentTodo = todoService.findById(todoId);
+        User creator = userService.findById(user.getUid());
+        Todo parentTodo = todoService.findById(checkpoint.getTodo());
 
         Checkpoint newCheckpoint = Checkpoint
                 .builder()
@@ -38,10 +39,6 @@ public class CheckpointService {
         parentTodo.addCheckpoint(newCheckpoint);
 
         return checkpointRepo.save(newCheckpoint);
-    }
-
-    public List<Checkpoint> findAll() {
-        return checkpointRepo.findAll();
     }
 
     public Checkpoint findById(String id) {
@@ -58,9 +55,10 @@ public class CheckpointService {
         return checkpointRepo.findByCreatedBy_UidAndTodo_Id(createdById, todoId);
     }
 
-    public void deleteById(String id) {
-        if (!checkpointRepo.existsById(id))
-            throw new CheckpointNotFound(id);
+    public void deleteById(User user, String id) {
+        Checkpoint checkpoint = findById(id);
+        if (!checkpoint.getCreatedBy().getUid().equals(user.getUid()))
+            throw new RequestNotAuthorized();
 
         checkpointRepo.deleteById(id);
     }

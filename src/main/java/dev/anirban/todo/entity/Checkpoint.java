@@ -1,6 +1,7 @@
 package dev.anirban.todo.entity;
 
 
+import dev.anirban.todo.dto.CheckpointDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
@@ -50,4 +51,14 @@ public class Checkpoint {
             fetch = FetchType.EAGER
     )
     private Todo todo;
+
+    public CheckpointDto toCheckpointDto() {
+        return CheckpointDto
+                .builder()
+                .id(id)
+                .description(description)
+                .status(status)
+                .todo(todo.getId())
+                .build();
+    }
 }

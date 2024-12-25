@@ -27,9 +27,7 @@ public class UrlConstants {
 
     // Checkpoint Endpoints
     public static final String CREATE_CHECKPOINT = "/checkpoints";
-    public static final String FIND_ALL_CHECKPOINT = "/checkpoints";
     public static final String FIND_CHECKPOINT_BY_ID = "/checkpoints/{id}";
-    public static final String FIND_CHECKPOINT_BY_USER_ID = "/checkpoints/user/{userId}";
-    public static final String FIND_CHECKPOINT_BY_USER_ID_AND_TODO_ID = "/checkpoints/user/{userId}/todo/{todoId}";
+    public static final String FIND_CHECKPOINT_QUERY = "/checkpoints";
     public static final String DELETE_CHECKPOINT_BY_ID = "/checkpoints/{id}";
 }
