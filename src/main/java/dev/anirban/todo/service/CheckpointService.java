@@ -35,6 +35,9 @@ public class CheckpointService {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
 
+        if (!parentTodo.getCreatedBy().getUid().equals(creator.getUid()))
+            throw new RequestNotAuthorized();
+
         creator.addCheckpoint(newCheckpoint);
         parentTodo.addCheckpoint(newCheckpoint);
 
