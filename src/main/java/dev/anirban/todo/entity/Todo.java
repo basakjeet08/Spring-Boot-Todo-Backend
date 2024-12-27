@@ -79,6 +79,10 @@ public class Todo {
                 .description(description)
                 .status(status)
                 .category(category != null ? category.getId() : null)
+                .checkpoints(checkpoints
+                        .stream()
+                        .map(Checkpoint::toCheckpointDto)
+                        .toList())
                 .build();
     }
 }

@@ -18,11 +18,15 @@ public class TodoController {
     private final TodoService service;
 
     @PostMapping(UrlConstants.CREATE_TODO)
-    public TodoDto create(
+    public List<TodoDto> create(
             @AuthenticationPrincipal User user,
             @RequestBody TodoDto todo
     ) {
-        return service.create(todo, user).toTodoDto();
+        return service
+                .create(todo, user)
+                .stream()
+                .map(Todo::toTodoDto)
+                .toList();
     }
 
     @GetMapping(UrlConstants.FIND_TODO_BY_ID)
@@ -49,10 +53,14 @@ public class TodoController {
     }
 
     @DeleteMapping(UrlConstants.DELETE_TODO_BY_ID)
-    public void deleteById(
+    public List<TodoDto> deleteById(
             @AuthenticationPrincipal User user,
             @PathVariable String id
     ) {
-        service.deleteById(user, id);
+        return service
+                .deleteById(user, id)
+                .stream()
+                .map(Todo::toTodoDto)
+                .toList();
     }
 }

@@ -2,6 +2,7 @@ package dev.anirban.todo.service;
 
 import dev.anirban.todo.dto.TodoDto;
 import dev.anirban.todo.entity.Category;
+import dev.anirban.todo.entity.Checkpoint;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.RequestNotAuthorized;
@@ -23,7 +24,7 @@ public class TodoService {
     private final CategoryService categoryService;
     private final TodoRepository todoRepo;
 
-    public Todo create(TodoDto todo, User user) {
+    public List<Todo> create(TodoDto todo, User user) {
 
         Todo newTodo = Todo
                 .builder()
@@ -34,6 +35,18 @@ public class TodoService {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .checkpoints(new HashSet<>())
                 .build();
+
+        if (todo.getCheckpoints() != null) {
+            todo.getCheckpoints().forEach(checkpointDto ->
+                    newTodo.addCheckpoint(Checkpoint
+                            .builder()
+                            .description(checkpointDto.getDescription())
+                            .status(Checkpoint.CheckpointStatus.PENDING)
+                            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+                            .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
+                            .build())
+            );
+        }
 
         User creator = userService.findById(user.getUid());
         creator.addTodo(newTodo);
@@ -46,7 +59,8 @@ public class TodoService {
             category.addTodo(newTodo);
         }
 
-        return todoRepo.save(newTodo);
+        todoRepo.save(newTodo);
+        return findByCreatedBy_Uid(user.getUid());
     }
 
     public Todo findById(String id) {
@@ -62,12 +76,15 @@ public class TodoService {
         return todoRepo.findByCreatedBy_UidAndCategory_Id(userId, categoryId);
     }
 
-    public void deleteById(User user, String id) {
+    public List<Todo> deleteById(User user, String id) {
         Todo todo = findById(id);
 
         if (!todo.getCreatedBy().getUid().equals(user.getUid()))
             throw new RequestNotAuthorized();
 
         todoRepo.deleteById(id);
+
+        return findByCreatedBy_Uid(user.getUid());
+
     }
 }

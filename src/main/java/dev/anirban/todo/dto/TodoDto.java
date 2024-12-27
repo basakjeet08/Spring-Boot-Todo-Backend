@@ -3,6 +3,8 @@ package dev.anirban.todo.dto;
 import dev.anirban.todo.entity.Todo;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -15,4 +17,5 @@ public class TodoDto {
     private String description;
     private Todo.TodoStatus status;
     private String category;
+    private List<CheckpointDto> checkpoints;
 }
