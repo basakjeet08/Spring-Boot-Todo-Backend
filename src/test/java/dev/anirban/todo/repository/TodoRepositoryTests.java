@@ -50,7 +50,6 @@ public class TodoRepositoryTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         userRepo.save(user1);
@@ -67,7 +66,6 @@ public class TodoRepositoryTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         userRepo.save(user2);
@@ -104,7 +102,6 @@ public class TodoRepositoryTests {
                 .status(Todo.TodoStatus.PENDING)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .checkpoints(new HashSet<>())
                 .build();
 
         todo2 = Todo
@@ -114,7 +111,6 @@ public class TodoRepositoryTests {
                 .status(Todo.TodoStatus.PENDING)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .checkpoints(new HashSet<>())
                 .build();
     }
 

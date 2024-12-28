@@ -2,7 +2,6 @@ package dev.anirban.todo.service;
 
 import dev.anirban.todo.dto.TodoDto;
 import dev.anirban.todo.entity.Category;
-import dev.anirban.todo.entity.Checkpoint;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.RequestNotAuthorized;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -33,20 +31,7 @@ public class TodoService {
                 .status(todo.getStatus() != null ? todo.getStatus() : Todo.TodoStatus.PENDING)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .checkpoints(new HashSet<>())
                 .build();
-
-        if (todo.getCheckpoints() != null) {
-            todo.getCheckpoints().forEach(checkpointDto ->
-                    newTodo.addCheckpoint(Checkpoint
-                            .builder()
-                            .description(checkpointDto.getDescription())
-                            .status(Checkpoint.CheckpointStatus.PENDING)
-                            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
-                            .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                            .build())
-            );
-        }
 
         User creator = userService.findById(user.getUid());
         creator.addTodo(newTodo);

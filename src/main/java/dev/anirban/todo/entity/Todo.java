@@ -1,14 +1,12 @@
 package dev.anirban.todo.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.anirban.todo.dto.TodoDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Timestamp;
-import java.util.Set;
+
 
 @Getter
 @Setter
@@ -57,19 +55,6 @@ public class Todo {
     )
     private Category category;
 
-    @OneToMany(
-            mappedBy = "todo",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
-    )
-    @JsonIgnore
-    private Set<Checkpoint> checkpoints;
-
-    public void addCheckpoint(Checkpoint checkpoint) {
-        checkpoints.add(checkpoint);
-        checkpoint.setTodo(this);
-    }
 
     public TodoDto toTodoDto() {
         return TodoDto
@@ -79,10 +64,6 @@ public class Todo {
                 .description(description)
                 .status(status)
                 .category(category != null ? category.getId() : null)
-                .checkpoints(checkpoints
-                        .stream()
-                        .map(Checkpoint::toCheckpointDto)
-                        .toList())
                 .build();
     }
 }

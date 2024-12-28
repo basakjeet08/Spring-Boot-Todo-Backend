@@ -1,7 +1,6 @@
 package dev.anirban.todo.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.anirban.todo.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -65,7 +64,6 @@ public class User implements UserDetails {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    @JsonIgnore
     private Set<Category> categoriesCreated;
 
     @OneToMany(
@@ -74,17 +72,7 @@ public class User implements UserDetails {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    @JsonIgnore
     private Set<Todo> todosCreated;
-
-    @OneToMany(
-            mappedBy = "createdBy",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
-    )
-    @JsonIgnore
-    private Set<Checkpoint> checkpointCreated;
 
     public void addCategory(Category category) {
         categoriesCreated.add(category);
@@ -96,11 +84,6 @@ public class User implements UserDetails {
         todo.setCreatedBy(this);
     }
 
-    public void addCheckpoint(Checkpoint checkpoint) {
-        checkpointCreated.add(checkpoint);
-        checkpoint.setCreatedBy(this);
-    }
-
     public UserDto toUserDto() {
         return UserDto
                 .builder()
@@ -110,7 +93,6 @@ public class User implements UserDetails {
                 .email(email)
                 .build();
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

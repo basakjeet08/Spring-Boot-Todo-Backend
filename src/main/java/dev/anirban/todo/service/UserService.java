@@ -33,7 +33,6 @@ public class UserService {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         return userRepo.save(newUser);

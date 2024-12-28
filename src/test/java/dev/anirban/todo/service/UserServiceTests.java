@@ -47,7 +47,6 @@ public class UserServiceTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         user2 = User
@@ -61,7 +60,6 @@ public class UserServiceTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
     }
 

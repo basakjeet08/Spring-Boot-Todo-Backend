@@ -44,7 +44,6 @@ public class CategoryRepositoryTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         userRepo.save(user1);
@@ -61,7 +60,6 @@ public class CategoryRepositoryTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         userRepo.save(user2);
