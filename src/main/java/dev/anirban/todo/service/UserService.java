@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +31,6 @@ public class UserService {
                 .build();
 
         return userRepo.save(newUser);
-    }
-
-    public List<User> findAll() {
-        return userRepo.findAll();
     }
 
     public User findById(String id) {

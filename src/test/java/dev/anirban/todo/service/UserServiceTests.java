@@ -10,13 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -32,7 +30,7 @@ public class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    private User user1, user2;
+    private User user1;
 
     @BeforeEach
     public void setup() {
@@ -46,44 +44,6 @@ public class UserServiceTests {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .todosCreated(new HashSet<>())
                 .build();
-
-        user2 = User
-                .builder()
-                .id("mock uid 02")
-                .name("Test User 02")
-                .username("Test Username 02")
-                .password("test password 02")
-                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
-                .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .todosCreated(new HashSet<>())
-                .build();
-    }
-
-    @Test
-    @DisplayName("findAll() -> returns List of User (positive outcome)")
-    public void findAll_returnsUsers() {
-        given(userRepo.findAll()).willReturn(List.of(user1, user2));
-
-        List<User> foundUsers = userService.findAll();
-
-        verify(userRepo, Mockito.times(1)).findAll();
-        Assertions.assertThat(foundUsers).isNotNull();
-        Assertions.assertThat(foundUsers).isNotEmpty();
-        Assertions.assertThat(foundUsers.size()).isEqualTo(2);
-        Assertions.assertThat(foundUsers.getFirst().getId()).isEqualTo(user1.getId());
-        Assertions.assertThat(foundUsers.get(1).getId()).isEqualTo(user2.getId());
-    }
-
-
-    @Test
-    @DisplayName("findAll() -> returns empty List of User (negative outcome)")
-    public void findAll_returnsEmpty() {
-        given(userRepo.findAll()).willReturn(List.of());
-
-        List<User> foundUsers = userService.findAll();
-
-        verify(userRepo, times(1)).findAll();
-        Assertions.assertThat(foundUsers).isEmpty();
     }
 
 

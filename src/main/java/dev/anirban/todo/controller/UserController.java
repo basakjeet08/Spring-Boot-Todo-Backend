@@ -15,7 +15,8 @@ public class UserController {
     private final UserService userService;
 
     @DeleteMapping(UrlConstants.DELETE_USER)
-    public void deleteById(@AuthenticationPrincipal User user) {
+    public String delete(@AuthenticationPrincipal User user) {
         userService.deleteById(user.getId());
+        return String.format("User with the ID : %s Deleted Successfully", user.getId());
     }
 }

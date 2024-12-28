@@ -39,7 +39,8 @@ public class TodoService {
     }
 
     public Todo findById(String id) {
-        return todoRepo.findById(id)
+        return todoRepo
+                .findById(id)
                 .orElseThrow(() -> new TodoNotFound(id));
     }
 
@@ -56,6 +57,5 @@ public class TodoService {
         todoRepo.deleteById(id);
 
         return findByCreatedBy_Id(user.getId());
-
     }
 }
