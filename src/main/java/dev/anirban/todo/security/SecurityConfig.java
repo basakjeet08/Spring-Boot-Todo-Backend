@@ -43,6 +43,7 @@ public class SecurityConfig {
                         request
                                 .requestMatchers(HttpMethod.POST, UrlConstants.REGISTER_USER).permitAll()
                                 .requestMatchers(HttpMethod.POST, UrlConstants.LOGIN_USER).permitAll()
+                                .requestMatchers(HttpMethod.POST, UrlConstants.VERIFY_USER).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

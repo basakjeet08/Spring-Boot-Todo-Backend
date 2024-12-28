@@ -28,4 +28,9 @@ public class AuthController {
     public TokenWrapper loginUser(@RequestBody AuthDto authDto) {
         return authService.loginUser(authDto);
     }
+
+    @PostMapping(UrlConstants.VERIFY_USER)
+    public TokenWrapper verifyUser(@RequestBody TokenWrapper tokenWrapper){
+        return authService.verify(tokenWrapper);
+    }
 }
