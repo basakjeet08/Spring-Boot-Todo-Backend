@@ -1,7 +1,6 @@
 package dev.anirban.todo.service;
 
 import dev.anirban.todo.dto.TodoDto;
-import dev.anirban.todo.entity.Category;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.exception.RequestNotAuthorized;
@@ -14,12 +13,12 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
 public class TodoService {
 
     private final UserService userService;
-    private final CategoryService categoryService;
     private final TodoRepository todoRepo;
 
     public List<Todo> create(TodoDto todo, User user) {
@@ -36,14 +35,6 @@ public class TodoService {
         User creator = userService.findById(user.getUid());
         creator.addTodo(newTodo);
 
-        if (todo.getCategory() != null && !todo.getCategory().isBlank()) {
-            Category category = categoryService.findById(todo.getCategory());
-            if (!category.getCreatedBy().getUid().equals(creator.getUid()))
-                throw new RequestNotAuthorized();
-
-            category.addTodo(newTodo);
-        }
-
         todoRepo.save(newTodo);
         return findByCreatedBy_Uid(user.getUid());
     }
@@ -55,10 +46,6 @@ public class TodoService {
 
     public List<Todo> findByCreatedBy_Uid(String userId) {
         return todoRepo.findByCreatedBy_Uid(userId);
-    }
-
-    public List<Todo> findByCreatedBy_UidAndCategory_Id(String userId, String categoryId) {
-        return todoRepo.findByCreatedBy_UidAndCategory_Id(userId, categoryId);
     }
 
     public List<Todo> deleteById(User user, String id) {

@@ -1,9 +1,7 @@
 package dev.anirban.todo.repository;
 
-import dev.anirban.todo.entity.Category;
 import dev.anirban.todo.entity.Todo;
 import dev.anirban.todo.entity.User;
-import dev.anirban.todo.repo.CategoryRepository;
 import dev.anirban.todo.repo.TodoRepository;
 import dev.anirban.todo.repo.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -29,10 +27,6 @@ public class TodoRepositoryTests {
     private User user1, user2;
 
     @Autowired
-    private CategoryRepository catRepo;
-    private Category category1, category2;
-
-    @Autowired
     private TodoRepository todoRepo;
     private Todo todo1, todo2;
 
@@ -48,7 +42,6 @@ public class TodoRepositoryTests {
                 .avatar("Test Avatar 01")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
                 .build();
 
@@ -64,33 +57,10 @@ public class TodoRepositoryTests {
                 .avatar("Test Avatar 02")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
                 .build();
 
         userRepo.save(user2);
-
-        category1 = Category
-                .builder()
-                .name("Category 01")
-                .description("Description 01")
-                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
-                .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .todoList(new HashSet<>())
-                .build();
-        user1.addCategory(category1);
-        catRepo.save(category1);
-
-        category2 = Category
-                .builder()
-                .name("Category 02")
-                .description("Description 02")
-                .createdAt(Timestamp.valueOf(LocalDateTime.now()))
-                .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .todoList(new HashSet<>())
-                .build();
-        user2.addCategory(category2);
-        catRepo.save(category2);
     }
 
     @BeforeEach
@@ -139,37 +109,6 @@ public class TodoRepositoryTests {
     @DisplayName("findByCreatedBy_Uid() -> returns Empty (negative outcome)")
     public void findByCreatedBy_Uid_returnsEmpty() {
         List<Todo> foundTodos = todoRepo.findByCreatedBy_Uid(user1.getUid());
-        Assertions.assertThat(foundTodos).isEmpty();
-    }
-
-
-    @Test
-    @DisplayName("findByCreatedBy_UidAndCategory_Id() -> returns Todo List (positive outcome)")
-    public void findByCreatedBy_UidAndCategory_Id_returnsTodos() {
-        user1.addTodo(todo1);
-        category1.addTodo(todo1);
-        todoRepo.save(todo1);
-
-        user2.addTodo(todo2);
-        category2.addTodo(todo2);
-        todoRepo.save(todo2);
-
-        List<Todo> foundTodos1 = todoRepo.findByCreatedBy_UidAndCategory_Id(user1.getUid(), category1.getId());
-        List<Todo> foundTodos2 = todoRepo.findByCreatedBy_UidAndCategory_Id(user2.getUid(), category2.getId());
-
-        Assertions.assertThat(foundTodos1).isNotNull();
-        Assertions.assertThat(foundTodos1.size()).isEqualTo(1);
-        Assertions.assertThat(foundTodos1.getFirst()).isEqualTo(todo1);
-
-        Assertions.assertThat(foundTodos2).isNotNull();
-        Assertions.assertThat(foundTodos2.size()).isEqualTo(1);
-        Assertions.assertThat(foundTodos2.getFirst()).isEqualTo(todo2);
-    }
-
-    @Test
-    @DisplayName("findByCreatedBy_UidAndCategory_Id() -> returns Empty (negative outcome)")
-    public void findByCreatedBy_UidAndCategory_Id_returnsEmpty() {
-        List<Todo> foundTodos = todoRepo.findByCreatedBy_UidAndCategory_Id(user1.getUid(), category1.getId());
         Assertions.assertThat(foundTodos).isEmpty();
     }
 }

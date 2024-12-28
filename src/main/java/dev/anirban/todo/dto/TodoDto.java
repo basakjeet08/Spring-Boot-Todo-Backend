@@ -15,5 +15,4 @@ public class TodoDto {
     private String title;
     private String description;
     private Todo.TodoStatus status;
-    private String category;
 }

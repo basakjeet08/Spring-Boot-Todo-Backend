@@ -49,13 +49,6 @@ public class Todo {
     )
     private User createdBy;
 
-    @ManyToOne(
-            cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
-            fetch = FetchType.EAGER
-    )
-    private Category category;
-
-
     public TodoDto toTodoDto() {
         return TodoDto
                 .builder()
@@ -63,7 +56,6 @@ public class Todo {
                 .title(title)
                 .description(description)
                 .status(status)
-                .category(category != null ? category.getId() : null)
                 .build();
     }
 }

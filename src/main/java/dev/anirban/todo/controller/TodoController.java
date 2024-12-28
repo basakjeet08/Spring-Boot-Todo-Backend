@@ -35,18 +35,9 @@ public class TodoController {
     }
 
     @GetMapping(UrlConstants.FIND_TODO_QUERY)
-    public List<TodoDto> findTodoQuery(
-            @AuthenticationPrincipal User user,
-            @RequestParam(value = "categoryId", required = false) String categoryId
-    ) {
-        List<Todo> todoList;
-
-        if (categoryId != null)
-            todoList = service.findByCreatedBy_UidAndCategory_Id(user.getUid(), categoryId);
-        else
-            todoList = service.findByCreatedBy_Uid(user.getUid());
-
-        return todoList
+    public List<TodoDto> findTodoQuery(@AuthenticationPrincipal User user) {
+        return service
+                .findByCreatedBy_Uid(user.getUid())
                 .stream()
                 .map(Todo::toTodoDto)
                 .toList();

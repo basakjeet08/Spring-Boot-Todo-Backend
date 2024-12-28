@@ -39,7 +39,6 @@ public class UserRepositoryTests {
                 .avatar("Test Avatar 01")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
                 .build();
 
@@ -53,7 +52,6 @@ public class UserRepositoryTests {
                 .avatar("Test Avatar 02")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
                 .build();
     }

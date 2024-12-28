@@ -64,20 +64,7 @@ public class User implements UserDetails {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    private Set<Category> categoriesCreated;
-
-    @OneToMany(
-            mappedBy = "createdBy",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
-    )
     private Set<Todo> todosCreated;
-
-    public void addCategory(Category category) {
-        categoriesCreated.add(category);
-        category.setCreatedBy(this);
-    }
 
     public void addTodo(Todo todo) {
         todosCreated.add(todo);
