@@ -39,13 +39,15 @@ public class TodoController {
     }
 
     @PutMapping(UrlConstants.UPDATE_TODO)
-    public TodoDto update(
+    public List<TodoDto> update(
             @AuthenticationPrincipal User user,
             @RequestBody TodoDto todoDto
     ) {
         return service
                 .update(todoDto, user)
-                .toTodoDto();
+                .stream()
+                .map(Todo::toTodoDto)
+                .toList();
     }
 
     @DeleteMapping(UrlConstants.DELETE_TODO_BY_ID)

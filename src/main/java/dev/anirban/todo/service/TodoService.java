@@ -48,7 +48,7 @@ public class TodoService {
         return todoRepo.findByCreatedBy_Id(userId);
     }
 
-    public Todo update(TodoDto todoDto, User user) {
+    public List<Todo> update(TodoDto todoDto, User user) {
         Todo savedTodo = findById(todoDto.getId());
 
         if (!savedTodo.getCreatedBy().getId().equals(user.getId())) {
@@ -61,7 +61,8 @@ public class TodoService {
             savedTodo.setIsCompleted(todoDto.getIsCompleted());
 
         savedTodo.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        return todoRepo.save(savedTodo);
+        todoRepo.save(savedTodo);
+        return findByCreatedBy_Id(user.getId());
     }
 
     public List<Todo> deleteById(User user, String id) {
