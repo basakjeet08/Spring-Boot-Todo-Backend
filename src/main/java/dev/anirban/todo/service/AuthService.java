@@ -28,8 +28,8 @@ public class AuthService {
     }
 
     private TokenWrapper generateTokenWrapper(UserDetails user) {
-        String token = jwtService.generateToken(user, new Date(System.currentTimeMillis() + 1000 * 60));
-        String refreshToken = jwtService.generateToken(user, new Date(System.currentTimeMillis() + 1000 * 60 * 30));
+        String token = jwtService.generateToken(user, new Date(System.currentTimeMillis() + 1000 * 60 * 60));
+        String refreshToken = jwtService.generateToken(user, new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
         return new TokenWrapper(token, refreshToken);
     }
 
