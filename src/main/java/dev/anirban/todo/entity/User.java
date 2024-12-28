@@ -38,10 +38,10 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
     @OneToMany(

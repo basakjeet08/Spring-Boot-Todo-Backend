@@ -25,9 +25,8 @@ public class TodoService {
 
         Todo newTodo = Todo
                 .builder()
-                .title(todo.getTitle())
                 .description(todo.getDescription())
-                .status(todo.getStatus() != null ? todo.getStatus() : Todo.TodoStatus.PENDING)
+                .isCompleted(false)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();

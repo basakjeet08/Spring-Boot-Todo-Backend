@@ -61,18 +61,16 @@ public class TodoRepositoryTests {
     public void setupTodo() {
         todo1 = Todo
                 .builder()
-                .title("Title 01")
                 .description("Description 01")
-                .status(Todo.TodoStatus.PENDING)
+                .isCompleted(false)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
 
         todo2 = Todo
                 .builder()
-                .title("Title 02")
                 .description("Description 02")
-                .status(Todo.TodoStatus.PENDING)
+                .isCompleted(false)
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();

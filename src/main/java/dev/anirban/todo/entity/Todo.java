@@ -18,44 +18,36 @@ import java.sql.Timestamp;
 @Table(name = "TODO_DB")
 public class Todo {
 
-    public enum TodoStatus {
-        PENDING, STARTED, COMPLETED
-    }
-
     @Id
     @UuidGenerator
     @Column(name = "id")
     private String id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
     @Column(name = "description")
     private String description;
 
-    @Column(name = "status", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private TodoStatus status;
+    @Column(name = "is_completed", nullable = false)
+    private Boolean isCompleted;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
     @ManyToOne(
             cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST},
             fetch = FetchType.EAGER
     )
+    @JoinColumn(name = "created_by_id", nullable = false)
     private User createdBy;
 
     public TodoDto toTodoDto() {
         return TodoDto
                 .builder()
                 .id(id)
-                .title(title)
                 .description(description)
-                .status(status)
+                .isCompleted(isCompleted)
                 .build();
     }
 }

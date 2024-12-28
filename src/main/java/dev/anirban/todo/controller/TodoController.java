@@ -29,11 +29,6 @@ public class TodoController {
                 .toList();
     }
 
-    @GetMapping(UrlConstants.FIND_TODO_BY_ID)
-    public TodoDto findById(@PathVariable String id) {
-        return service.findById(id).toTodoDto();
-    }
-
     @GetMapping(UrlConstants.FIND_TODO_QUERY)
     public List<TodoDto> findTodoQuery(@AuthenticationPrincipal User user) {
         return service
