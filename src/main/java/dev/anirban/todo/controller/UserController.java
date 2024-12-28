@@ -1,7 +1,6 @@
 package dev.anirban.todo.controller;
 
 import dev.anirban.todo.constants.UrlConstants;
-import dev.anirban.todo.dto.UserDto;
 import dev.anirban.todo.entity.User;
 import dev.anirban.todo.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +14,9 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping(UrlConstants.FIND_USER)
-    public UserDto findById(@AuthenticationPrincipal User user) {
-        return userService.findById(user.getUid()).toUserDto();
-    }
-
     @DeleteMapping(UrlConstants.DELETE_USER)
-    public void deleteById(@AuthenticationPrincipal User user) {
-        userService.deleteById(user.getUid());
+    public String delete(@AuthenticationPrincipal User user) {
+        userService.deleteById(user.getId());
+        return String.format("User with the ID : %s Deleted Successfully", user.getId());
     }
 }
