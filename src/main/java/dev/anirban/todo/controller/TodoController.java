@@ -37,7 +37,7 @@ public class TodoController {
     @GetMapping(UrlConstants.FIND_TODO_QUERY)
     public List<TodoDto> findTodoQuery(@AuthenticationPrincipal User user) {
         return service
-                .findByCreatedBy_Uid(user.getUid())
+                .findByCreatedBy_Id(user.getId())
                 .stream()
                 .map(Todo::toTodoDto)
                 .toList();

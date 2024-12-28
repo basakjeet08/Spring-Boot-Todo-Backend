@@ -32,11 +32,11 @@ public class TodoService {
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
 
-        User creator = userService.findById(user.getUid());
+        User creator = userService.findById(user.getId());
         creator.addTodo(newTodo);
 
         todoRepo.save(newTodo);
-        return findByCreatedBy_Uid(user.getUid());
+        return findByCreatedBy_Id(user.getId());
     }
 
     public Todo findById(String id) {
@@ -44,19 +44,19 @@ public class TodoService {
                 .orElseThrow(() -> new TodoNotFound(id));
     }
 
-    public List<Todo> findByCreatedBy_Uid(String userId) {
-        return todoRepo.findByCreatedBy_Uid(userId);
+    public List<Todo> findByCreatedBy_Id(String userId) {
+        return todoRepo.findByCreatedBy_Id(userId);
     }
 
     public List<Todo> deleteById(User user, String id) {
         Todo todo = findById(id);
 
-        if (!todo.getCreatedBy().getUid().equals(user.getUid()))
+        if (!todo.getCreatedBy().getId().equals(user.getId()))
             throw new RequestNotAuthorized();
 
         todoRepo.deleteById(id);
 
-        return findByCreatedBy_Uid(user.getUid());
+        return findByCreatedBy_Id(user.getId());
 
     }
 }

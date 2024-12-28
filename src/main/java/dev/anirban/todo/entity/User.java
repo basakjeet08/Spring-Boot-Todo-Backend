@@ -21,17 +21,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "USER_DB")
+@Table(name = "User_DB")
 public class User implements UserDetails {
-
-    public enum UserRole {
-        USER
-    }
 
     @Id
     @UuidGenerator
     @Column(name = "id")
-    private String uid;
+    private String id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -39,18 +35,8 @@ public class User implements UserDetails {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
-
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "roles", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private UserRole roles;
-
-    @Column(name = "avatar")
-    private String avatar;
 
     @Column(name = "created_at")
     private Timestamp createdAt;
@@ -74,16 +60,15 @@ public class User implements UserDetails {
     public UserDto toUserDto() {
         return UserDto
                 .builder()
-                .uid(uid)
+                .id(id)
                 .name(name)
                 .username(username)
-                .email(email)
                 .build();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roles.name()));
+        return List.of(new SimpleGrantedAuthority("User"));
     }
 
     @Override

@@ -36,10 +36,7 @@ public class TodoRepositoryTests {
                 .builder()
                 .name("Test User 01")
                 .username("Test Username 01")
-                .email("testemai1l@gmail.com")
                 .password("test password 01")
-                .roles(User.UserRole.USER)
-                .avatar("Test Avatar 01")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .todosCreated(new HashSet<>())
@@ -51,10 +48,7 @@ public class TodoRepositoryTests {
                 .builder()
                 .name("Test User 02")
                 .username("Test Username 02")
-                .email("testemail2@gmail.com")
                 .password("test password 02")
-                .roles(User.UserRole.USER)
-                .avatar("Test Avatar 02")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
                 .todosCreated(new HashSet<>())
@@ -86,15 +80,15 @@ public class TodoRepositoryTests {
 
     @Test
     @DisplayName("findByCreatedBy_Uid() -> returns List of Todo (positive outcome)")
-    public void findByCreatedBy_Uid_returnsTodos() {
+    public void findByCreatedBy_Id_returnsTodos() {
         user1.addTodo(todo1);
         todoRepo.save(todo1);
 
         user2.addTodo(todo2);
         todoRepo.save(todo2);
 
-        List<Todo> foundTodo1 = todoRepo.findByCreatedBy_Uid(user1.getUid());
-        List<Todo> foundTodo2 = todoRepo.findByCreatedBy_Uid(user2.getUid());
+        List<Todo> foundTodo1 = todoRepo.findByCreatedBy_Id(user1.getId());
+        List<Todo> foundTodo2 = todoRepo.findByCreatedBy_Id(user2.getId());
 
         Assertions.assertThat(foundTodo1).isNotNull();
         Assertions.assertThat(foundTodo1.size()).isEqualTo(1);
@@ -107,8 +101,8 @@ public class TodoRepositoryTests {
 
     @Test
     @DisplayName("findByCreatedBy_Uid() -> returns Empty (negative outcome)")
-    public void findByCreatedBy_Uid_returnsEmpty() {
-        List<Todo> foundTodos = todoRepo.findByCreatedBy_Uid(user1.getUid());
+    public void findByCreatedBy_Id_returnsEmpty() {
+        List<Todo> foundTodos = todoRepo.findByCreatedBy_Id(user1.getId());
         Assertions.assertThat(foundTodos).isEmpty();
     }
 }
