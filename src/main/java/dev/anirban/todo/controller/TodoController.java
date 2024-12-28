@@ -38,6 +38,16 @@ public class TodoController {
                 .toList();
     }
 
+    @PutMapping(UrlConstants.UPDATE_TODO)
+    public TodoDto update(
+            @AuthenticationPrincipal User user,
+            @RequestBody TodoDto todoDto
+    ) {
+        return service
+                .update(todoDto, user)
+                .toTodoDto();
+    }
+
     @DeleteMapping(UrlConstants.DELETE_TODO_BY_ID)
     public List<TodoDto> deleteById(
             @AuthenticationPrincipal User user,
