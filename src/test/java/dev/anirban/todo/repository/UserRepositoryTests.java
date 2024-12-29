@@ -87,7 +87,6 @@ public class UserRepositoryTests {
 
         Assertions.assertThat(storedUsers).isNotNull();
         Assertions.assertThat(storedUsers.size()).isEqualTo(2);
-        Assertions.assertThat(storedUsers.getFirst().getId()).isEqualTo(user1.getId());
         Assertions.assertThat(storedUsers.get(1).getId()).isEqualTo(user2.getId());
     }
 

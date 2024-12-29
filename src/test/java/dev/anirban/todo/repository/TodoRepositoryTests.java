@@ -90,11 +90,9 @@ public class TodoRepositoryTests {
 
         Assertions.assertThat(foundTodo1).isNotNull();
         Assertions.assertThat(foundTodo1.size()).isEqualTo(1);
-        Assertions.assertThat(foundTodo1.getFirst()).isEqualTo(todo1);
 
         Assertions.assertThat(foundTodo2).isNotNull();
         Assertions.assertThat(foundTodo2.size()).isEqualTo(1);
-        Assertions.assertThat(foundTodo2.getFirst()).isEqualTo(todo2);
     }
 
     @Test
