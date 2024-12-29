@@ -1,3 +1,4 @@
 FROM openjdk:18-jdk-slim
-COPY target/your-app-name.jar /app.jar
+ARG JAR_FILE=build/libs/todo-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
