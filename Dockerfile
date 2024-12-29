@@ -1,22 +1,26 @@
-# Stage 1: Build the application
-FROM gradle:8.0-jdk18 AS build
+# Use the Eclipse Temurin 18 base image for Java 18
+FROM eclipse-temurin:18-jdk-alpine AS build
+
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the Gradle project files
+# Copy the entire project into the container
 COPY . .
 
-# Build the project and create the JAR file
+# Build the application using Gradle (if using Gradle for building)
 RUN ./gradlew bootJar
 
-# Stage 2: Run the application
-FROM openjdk:18-jdk-slim
+# Stage 2: Create the runtime image
+FROM eclipse-temurin:18-jre-alpine
+
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy the JAR file from the build stage
-COPY --from=build /app/build/libs/*.jar app.jar
+# Copy the generated JAR file from the build stage
+COPY --from=build /app/build/libs/*.jar todo-0.0.1-SNAPSHOT.jar
 
-# Expose the application port
+# Expose the application port (default Spring Boot port is 8080)
 EXPOSE 8080
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Command to run the application
+ENTRYPOINT ["java", "-jar", "todo-0.0.1-SNAPSHOT.jar"]
