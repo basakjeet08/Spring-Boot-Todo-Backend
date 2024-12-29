@@ -45,7 +45,7 @@ public class TodoService {
     }
 
     public List<Todo> findByCreatedBy_Id(String userId) {
-        return todoRepo.findByCreatedBy_Id(userId);
+        return todoRepo.findByCreatedBy_IdOrderByIsCompletedAscUpdatedAtDesc(userId);
     }
 
     public List<Todo> update(TodoDto todoDto, User user) {
