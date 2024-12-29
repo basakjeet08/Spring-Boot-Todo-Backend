@@ -1,7 +1,6 @@
 package dev.anirban.todo.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.anirban.todo.dto.UserDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,17 +21,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "USER_DB")
+@Table(name = "User_DB")
 public class User implements UserDetails {
-
-    public enum UserRole {
-        USER
-    }
 
     @Id
     @UuidGenerator
     @Column(name = "id")
-    private String uid;
+    private String id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -40,23 +35,13 @@ public class User implements UserDetails {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
-
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "roles", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private UserRole roles;
-
-    @Column(name = "avatar")
-    private String avatar;
-
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
 
     @OneToMany(
@@ -65,56 +50,25 @@ public class User implements UserDetails {
             orphanRemoval = true,
             cascade = CascadeType.ALL
     )
-    @JsonIgnore
-    private Set<Category> categoriesCreated;
-
-    @OneToMany(
-            mappedBy = "createdBy",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
-    )
-    @JsonIgnore
     private Set<Todo> todosCreated;
-
-    @OneToMany(
-            mappedBy = "createdBy",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
-    )
-    @JsonIgnore
-    private Set<Checkpoint> checkpointCreated;
-
-    public void addCategory(Category category) {
-        categoriesCreated.add(category);
-        category.setCreatedBy(this);
-    }
 
     public void addTodo(Todo todo) {
         todosCreated.add(todo);
         todo.setCreatedBy(this);
     }
 
-    public void addCheckpoint(Checkpoint checkpoint) {
-        checkpointCreated.add(checkpoint);
-        checkpoint.setCreatedBy(this);
-    }
-
     public UserDto toUserDto() {
         return UserDto
                 .builder()
-                .uid(uid)
+                .id(id)
                 .name(name)
                 .username(username)
-                .email(email)
                 .build();
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roles.name()));
+        return List.of(new SimpleGrantedAuthority("User"));
     }
 
     @Override

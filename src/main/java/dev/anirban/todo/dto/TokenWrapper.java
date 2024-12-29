@@ -8,4 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 public class TokenWrapper {
     private String token;
+    private String refreshToken;
 }

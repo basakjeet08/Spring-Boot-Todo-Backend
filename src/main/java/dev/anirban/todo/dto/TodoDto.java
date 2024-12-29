@@ -1,9 +1,7 @@
 package dev.anirban.todo.dto;
 
-import dev.anirban.todo.entity.Todo;
 import lombok.*;
 
-import java.util.List;
 
 @Getter
 @Setter
@@ -13,9 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 public class TodoDto {
     private String id;
-    private String title;
     private String description;
-    private Todo.TodoStatus status;
-    private String category;
-    private List<CheckpointDto> checkpoints;
+    private Boolean isCompleted;
 }

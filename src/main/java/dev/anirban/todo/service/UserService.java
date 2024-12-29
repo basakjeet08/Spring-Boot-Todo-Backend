@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,22 +24,13 @@ public class UserService {
                 .builder()
                 .name(authDto.getName())
                 .username(authDto.getUsername())
-                .email(authDto.getEmail())
                 .password(encoder.encode(authDto.getPassword()))
-                .roles(User.UserRole.USER)
-                .avatar("Default Image Url")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         return userRepo.save(newUser);
-    }
-
-    public List<User> findAll() {
-        return userRepo.findAll();
     }
 
     public User findById(String id) {

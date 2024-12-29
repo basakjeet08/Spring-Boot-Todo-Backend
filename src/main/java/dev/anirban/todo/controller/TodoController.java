@@ -29,24 +29,22 @@ public class TodoController {
                 .toList();
     }
 
-    @GetMapping(UrlConstants.FIND_TODO_BY_ID)
-    public TodoDto findById(@PathVariable String id) {
-        return service.findById(id).toTodoDto();
+    @GetMapping(UrlConstants.FIND_TODO_QUERY)
+    public List<TodoDto> findTodoQuery(@AuthenticationPrincipal User user) {
+        return service
+                .findByCreatedBy_Id(user.getId())
+                .stream()
+                .map(Todo::toTodoDto)
+                .toList();
     }
 
-    @GetMapping(UrlConstants.FIND_TODO_QUERY)
-    public List<TodoDto> findTodoQuery(
+    @PutMapping(UrlConstants.UPDATE_TODO)
+    public List<TodoDto> update(
             @AuthenticationPrincipal User user,
-            @RequestParam(value = "categoryId", required = false) String categoryId
+            @RequestBody TodoDto todoDto
     ) {
-        List<Todo> todoList;
-
-        if (categoryId != null)
-            todoList = service.findByCreatedBy_UidAndCategory_Id(user.getUid(), categoryId);
-        else
-            todoList = service.findByCreatedBy_Uid(user.getUid());
-
-        return todoList
+        return service
+                .update(todoDto, user)
                 .stream()
                 .map(Todo::toTodoDto)
                 .toList();

@@ -33,30 +33,20 @@ public class UserRepositoryTests {
                 .builder()
                 .name("Test User 01")
                 .username("Test Username 01")
-                .email("testemail@gmail.com")
                 .password("test password 01")
-                .roles(User.UserRole.USER)
-                .avatar("Test Avatar 01")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
 
         user2 = User
                 .builder()
                 .name("Test User 02")
                 .username("Test Username 02")
-                .email("testemail02@gmail.com")
                 .password("test password 02")
-                .roles(User.UserRole.USER)
-                .avatar("Test Avatar 02")
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .updatedAt(Timestamp.valueOf(LocalDateTime.now()))
-                .categoriesCreated(new HashSet<>())
                 .todosCreated(new HashSet<>())
-                .checkpointCreated(new HashSet<>())
                 .build();
     }
 
@@ -68,7 +58,7 @@ public class UserRepositoryTests {
         User savedUser = userRepo.save(user1);
 
         Assertions.assertThat(savedUser).isNotNull();
-        Assertions.assertThat(savedUser.getUid()).isNotNull();
+        Assertions.assertThat(savedUser.getId()).isNotNull();
         Assertions.assertThat(savedUser).isEqualTo(user1);
     }
 
@@ -77,19 +67,6 @@ public class UserRepositoryTests {
     @DisplayName("save() -> Duplicate username -> throws an Exception (negative outcome)")
     public void save_duplicateUsername_throwsException() {
         user2.setUsername(user1.getUsername());
-
-        userRepo.save(user1);
-
-        Assertions
-                .assertThatThrownBy(() -> userRepo.saveAndFlush(user2))
-                .isInstanceOf(DataIntegrityViolationException.class);
-    }
-
-
-    @Test
-    @DisplayName("save() -> Duplicate email -> throws an Exception (negative outcome)")
-    public void save_duplicateEmail_throwsException() {
-        user2.setEmail(user1.getEmail());
 
         userRepo.save(user1);
 
@@ -110,8 +87,8 @@ public class UserRepositoryTests {
 
         Assertions.assertThat(storedUsers).isNotNull();
         Assertions.assertThat(storedUsers.size()).isEqualTo(2);
-        Assertions.assertThat(storedUsers.getFirst().getUid()).isEqualTo(user1.getUid());
-        Assertions.assertThat(storedUsers.get(1).getUid()).isEqualTo(user2.getUid());
+        Assertions.assertThat(storedUsers.getFirst().getId()).isEqualTo(user1.getId());
+        Assertions.assertThat(storedUsers.get(1).getId()).isEqualTo(user2.getId());
     }
 
 
@@ -129,7 +106,7 @@ public class UserRepositoryTests {
 
         User storedUser = userRepo.save(user1);
 
-        Optional<User> foundUser = userRepo.findById(storedUser.getUid());
+        Optional<User> foundUser = userRepo.findById(storedUser.getId());
 
         Assertions.assertThat(foundUser).isNotEmpty();
         Assertions.assertThat(foundUser.get()).isEqualTo(storedUser);
@@ -150,7 +127,7 @@ public class UserRepositoryTests {
     public void deleteById_deletesUser() {
 
         User storedUser = userRepo.save(user1);
-        userRepo.deleteById(storedUser.getUid());
+        userRepo.deleteById(storedUser.getId());
         List<User> foundUser = userRepo.findAll();
 
         Assertions.assertThat(foundUser).isEmpty();

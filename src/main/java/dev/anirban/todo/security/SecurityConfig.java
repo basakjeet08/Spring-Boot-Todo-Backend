@@ -43,6 +43,7 @@ public class SecurityConfig {
                         request
                                 .requestMatchers(HttpMethod.POST, UrlConstants.REGISTER_USER).permitAll()
                                 .requestMatchers(HttpMethod.POST, UrlConstants.LOGIN_USER).permitAll()
+                                .requestMatchers(HttpMethod.POST, UrlConstants.VERIFY_USER).permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -54,7 +55,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // React app URL
+        configuration.setAllowedOrigins(List.of("https://react-todo-website-clvwkaxs8-anirban-basaks-projects.vercel.app")); // React app URL
         configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allowed HTTP methods
 
